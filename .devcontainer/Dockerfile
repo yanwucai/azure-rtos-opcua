@@ -1,7 +1,7 @@
 # See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/ubuntu/.devcontainer/base.Dockerfile
 
 # [Choice] Ubuntu version (use hirsuite or bionic on local arm64/Apple Silicon): hirsute, focal, bionic
-ARG VARIANT="hirsute"
+ARG VARIANT="jammy"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
 # This Dockerfile's base image has a non-root user with sudo access. Use the "remoteUser"
@@ -14,11 +14,15 @@ ARG USER_GID=$USER_UID
 
 ENV VCPKG_ROOT /opt/vcpkg
 
-
+# Configure CMake repository
+# https://apt.kitware.com/
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+    && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
 
 # Configure apt and install packages
 RUN apt update \
     && export DEBIAN_FRONTEND=noninteractive \
+    && rm /usr/share/keyrings/kitware-archive-keyring.gpg \
     #
     # Install C++ tools and Git
     && apt -y install --no-install-recommends sudo build-essential gcc-multilib g++-multilib gdb cgdb cppcheck git cmake kitware-archive-keyring ninja-build zip unzip ethtool iproute2 iptables net-tools dnsutils iputils-ping ncat pkg-config python\

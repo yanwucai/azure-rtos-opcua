@@ -22,7 +22,7 @@
             "label": "Run Azure RTOS OPC UA Project",
             "type": "shell",
             "linux": {
-                "command": "./build/${input:opcuaProjectsList}",
+                "command": "sudo ./tools/init_network.sh>/dev/null 2>&1 && exe=./build/${input:opcuaProjectsList} && echo $exe && sudo setcap cap_net_raw,cap_net_admin=eip $exe && $exe",
                 "options": {
                     "cwd": "${workspaceFolder}"
                 },
