@@ -25,7 +25,7 @@ RUN apt update \
     && rm /usr/share/keyrings/kitware-archive-keyring.gpg \
     #
     # Install C++ tools and Git
-    && apt -y install --no-install-recommends sudo build-essential gcc-multilib g++-multilib gdb cgdb cppcheck git cmake kitware-archive-keyring ninja-build zip unzip ethtool iproute2 iptables net-tools dnsutils iputils-ping ncat pkg-config python\
+    && apt -y install --no-install-recommends sudo build-essential gcc-multilib g++-multilib gdb cgdb cppcheck git cmake kitware-archive-keyring ninja-build zip unzip ethtool iproute2 iptables net-tools dnsutils iputils-ping ncat pkg-config python2\
     #
     # [Optional] Update UID/GID if needed
     && if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
