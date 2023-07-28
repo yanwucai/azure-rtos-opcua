@@ -1,0 +1,10 @@
+[submodule "libs/open62541"]
+	path = libs/open62541
+	url = https://github.com/yanwucai/open62541.git
+	branch = arch_azurertos
+[submodule "libs/threadx"]
+	path = libs/threadx
+	url = https://github.com/azure-rtos/threadx
+[submodule "libs/netxduo"]
+	path = libs/netxduo
+	url = https://github.com/azure-rtos/netxduo

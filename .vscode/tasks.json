@@ -1,0 +1,109 @@
+{
+    "version": "1.0.0",
+    "tasks": [
+        {
+            "label": "Build Azure RTOS OPC UA Project",
+            "type": "shell",
+            "linux": {
+                "command": "cmake -Bbuild && cmake --build build -j4",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ],
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Azure RTOS OPC UA Project",
+            "type": "shell",
+            "linux": {
+                "command": "./build/${input:opcuaProjectsList}",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ]
+            }
+        },
+        {
+            "label": "Clean Azure RTOS OPC UA Project",
+            "type": "shell",
+            "linux": {
+                "command": "rm -rf ./build/",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ]
+            }
+        },
+        {
+            "label": "Build open62541 Project",
+            "type": "shell",
+            "linux": {
+                "command": "cd ./libs/open62541 && cmake -Bbuild -DUA_BUILD_EXAMPLES=ON -DUA_ENABLE_DISCOVERY=ON -DUA_ENABLE_PUBSUB=ON && cmake --build build -j4",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ],
+            }
+        },
+        {
+            "label": "Clean open62541 Project",
+            "type": "shell",
+            "linux": {
+                "command": "rm -rf ./libs/open62541/build/",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ]
+            }
+        }
+
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "opcuaProjectsList", 
+            "description": "Select the project you want to run",
+            "options": [
+                {
+                    "label": "01",
+                    "value": "server"
+                },
+                {
+                    "label": "02",
+                    "value": "client"
+                },
+                {
+                    "label": "03",
+                    "value": "pubsub_publish"
+                },
+                {
+                    "label": "04",
+                    "value": "pubsub_subscribe"
+                },
+                {
+                    "label": "05",
+                    "value": "discovery_server_regist"
+                },
+                {
+                    "label": "06",
+                    "value": "discovery_client_find_servers"
+                }
+            ],
+            "default": "server"
+        }
+    ]
+}
