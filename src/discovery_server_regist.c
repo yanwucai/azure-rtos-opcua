@@ -23,7 +23,7 @@
 
 #define          DEMO_STACK_SIZE     (16*1024)
 
-#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 5)
+#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 7)
 #define          SAMPLE_IPV4_MASK    0xFFFFFF00UL
 #define          SAMPLE_IPV4_GATEWAY IP_ADDRESS(192, 168, 201, 1)
 
@@ -312,6 +312,8 @@ writeInteger(UA_Server *server, const UA_NodeId *sessionId,
 
 VOID  thread_server_entry(ULONG thread_input)
 {
+    sntp_time_sync();
+
     UA_Server *server = UA_Server_new();
     UA_ServerConfig *config = UA_Server_getConfig(server);
     UA_ServerConfig_setMinimal(config, 4841, NULL);

@@ -21,7 +21,7 @@ set(CMAKE_CXX_FLAGS "${LINUX_FLAGS} -m32 -fno-rtti -fno-exceptions" CACHE INTERN
 set(CMAKE_ASM_FLAGS "${LINUX_FLAGS} -x assembler-with-cpp" CACHE INTERNAL "asm compiler flags")
 set(CMAKE_EXE_LINKER_FLAGS "${LINUX_FLAGS} ${LD_FLAGS} -Wl,--gc-sections" CACHE INTERNAL "exe link flags")
 
-SET(CMAKE_C_FLAGS_DEBUG "-g -ggdb3 -save-temps" CACHE INTERNAL "c debug compiler flags")
+SET(CMAKE_C_FLAGS_DEBUG "-g -ggdb3" CACHE INTERNAL "c debug compiler flags")
 SET(CMAKE_CXX_FLAGS_DEBUG "-Og -g -ggdb3" CACHE INTERNAL "cxx debug compiler flags")
 SET(CMAKE_ASM_FLAGS_DEBUG "-g -ggdb3" CACHE INTERNAL "asm debug compiler flags")
 

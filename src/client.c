@@ -19,7 +19,7 @@
 
 #define          DEMO_STACK_SIZE     (16*1024)
 
-#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 5)
+#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 8)
 #define          SAMPLE_IPV4_MASK    0xFFFFFF00UL
 #define          SAMPLE_IPV4_GATEWAY IP_ADDRESS(192, 168, 201, 1)
 
@@ -268,7 +268,7 @@ UA_Boolean running = true;
 
 VOID  thread_client_entry(ULONG thread_input)
 {
-    //sntp_time_sync();
+    sntp_time_sync();
 
 
     UA_Client* client = UA_Client_new();
@@ -283,41 +283,40 @@ VOID  thread_client_entry(ULONG thread_input)
     UA_Variant value; /* Variants can hold scalar values and arrays of any type */
     UA_Variant_init(&value);
 
-    /* Endless loop reading the server time */
-    while (running) {
-        /* if already connected, this will return GOOD and do nothing */
-        /* if the connection is closed/errored, the connection will be reset and then reconnected */
-        /* Alternatively you can also use UA_Client_getState to get the current state */
-        UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://192.168.1.1:4840");
-        if (retval != UA_STATUSCODE_GOOD) {
-            UA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_CLIENT, "Not connected. Retrying to connect in 1 second");
-            /* The connect may timeout after 1 second (see above) or it may fail immediately on network errors */
-            /* E.g. name resolution errors or unreachable network. Thus there should be a small sleep here */
-            UA_sleep_ms(1000);
-            continue;
-        }
 
-        /* NodeId of the variable holding the current time */
-        const UA_NodeId nodeId =
-            UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_SERVERSTATUS_CURRENTTIME);
-
-        retval = UA_Client_readValueAttribute(client, nodeId, &value);
-        if (retval == UA_STATUSCODE_BADCONNECTIONCLOSED) {
-            UA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_CLIENT,
-                "Connection was closed. Reconnecting ...");
-            continue;
-        }
-        if (retval == UA_STATUSCODE_GOOD &&
-            UA_Variant_hasScalarType(&value, &UA_TYPES[UA_TYPES_DATETIME])) {
-            UA_DateTime raw_date = *(UA_DateTime*)value.data;
-            UA_DateTimeStruct dts = UA_DateTime_toStruct(raw_date);
-            UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
-                "date is: %02u-%02u-%04u %02u:%02u:%02u.%03u",
-                dts.day, dts.month, dts.year, dts.hour, dts.min, dts.sec, dts.milliSec);
-        }
-        UA_Variant_clear(&value);
+    /* if already connected, this will return GOOD and do nothing */
+    /* if the connection is closed/errored, the connection will be reset and then reconnected */
+    /* Alternatively you can also use UA_Client_getState to get the current state */
+    UA_StatusCode retval = UA_Client_connect(client, "opc.tcp://192.168.201.1:4840");
+    if (retval != UA_STATUSCODE_GOOD) {
+        UA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_CLIENT, "Not connected. Retrying to connect in 1 second");
+        /* The connect may timeout after 1 second (see above) or it may fail immediately on network errors */
+        /* E.g. name resolution errors or unreachable network. Thus there should be a small sleep here */
         UA_sleep_ms(1000);
-    };
+        return;
+    }
+
+    /* NodeId of the variable holding the current time */
+    const UA_NodeId nodeId =
+        UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER_SERVERSTATUS_CURRENTTIME);
+
+    retval = UA_Client_readValueAttribute(client, nodeId, &value);
+    if (retval == UA_STATUSCODE_BADCONNECTIONCLOSED) {
+        UA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_CLIENT,
+            "Connection was closed. Reconnecting ...");
+        return;
+    }
+    if (retval == UA_STATUSCODE_GOOD &&
+        UA_Variant_hasScalarType(&value, &UA_TYPES[UA_TYPES_DATETIME])) {
+        UA_DateTime raw_date = *(UA_DateTime*)value.data;
+        UA_DateTimeStruct dts = UA_DateTime_toStruct(raw_date);
+        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
+            "date is: %02u-%02u-%04u %02u:%02u:%02u.%03u",
+            dts.day, dts.month, dts.year, dts.hour, dts.min, dts.sec, dts.milliSec);
+    }
+    UA_Variant_clear(&value);
+
+
 
     /* Clean up */
     UA_Variant_clear(&value);

@@ -48,7 +48,7 @@
             "label": "Build open62541 Project",
             "type": "shell",
             "linux": {
-                "command": "cd ./libs/open62541 && cmake -Bbuild -DUA_BUILD_EXAMPLES=ON -DUA_ENABLE_DISCOVERY=ON -DUA_ENABLE_PUBSUB=ON && cmake --build build -j4",
+                "command": "cd ./libs/open62541 && cmake -Bbuild -DUA_BUILD_EXAMPLES=ON -DUA_ENABLE_DISCOVERY=ON -DUA_ENABLE_DISCOVERY_MULTICAST=ON -DUA_ENABLE_PUBSUB=ON && cmake --build build -j4",
                 "options": {
                     "cwd": "${workspaceFolder}"
                 },

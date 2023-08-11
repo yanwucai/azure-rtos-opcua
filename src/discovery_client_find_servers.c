@@ -19,7 +19,7 @@
 
 #define          DEMO_STACK_SIZE     (16*1024)
 
-#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 5)
+#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 6)
 #define          SAMPLE_IPV4_MASK    0xFFFFFF00UL
 #define          SAMPLE_IPV4_GATEWAY IP_ADDRESS(192, 168, 201, 1)
 
@@ -269,7 +269,7 @@ UA_Boolean running = true;
 
 VOID  thread_client_entry(ULONG thread_input)
 {
-    //sntp_time_sync();
+    sntp_time_sync();
 
 
     /*
@@ -369,76 +369,7 @@ VOID  thread_client_entry(ULONG thread_input)
     }
 
 
-    /*
-     * Now that we have the list of available servers, call get endpoints on all of them
-     */
 
-    printf("-------- Server Endpoints --------\n");
-
-    for(size_t i = 0; i < applicationDescriptionArraySize; i++) {
-        UA_ApplicationDescription *description = &applicationDescriptionArray[i];
-        if(description->discoveryUrlsSize == 0) {
-            UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_CLIENT,
-                        "[GetEndpoints] Server %.*s did not provide any discovery urls. Skipping.",
-                        (int)description->applicationUri.length, description->applicationUri.data);
-            continue;
-        }
-
-        printf("\nEndpoints for Server[%lu]: %.*s\n", (unsigned long) i,
-               (int) description->applicationUri.length, description->applicationUri.data);
-
-        UA_Client *client = UA_Client_new();
-        UA_ClientConfig_setDefault(UA_Client_getConfig(client));
-
-        char *discoveryUrl = (char *) UA_malloc(sizeof(char) * description->discoveryUrls[0].length + 1);
-        memcpy(discoveryUrl, description->discoveryUrls[0].data, description->discoveryUrls[0].length);
-        discoveryUrl[description->discoveryUrls[0].length] = '\0';
-
-        UA_EndpointDescription *endpointArray = NULL;
-        size_t endpointArraySize = 0;
-        //TODO: adapt to the new async getEndpoint
-        retval = UA_Client_getEndpoints(client, discoveryUrl, &endpointArraySize, &endpointArray);
-        UA_free(discoveryUrl);
-        if(retval != UA_STATUSCODE_GOOD) {
-            UA_Client_disconnect(client);
-            UA_Client_delete(client);
-            break;
-        }
-
-        for(size_t j = 0; j < endpointArraySize; j++) {
-            UA_EndpointDescription *endpoint = &endpointArray[j];
-            printf("\n\tEndpoint[%lu]:", (unsigned long) j);
-            printf("\n\t\tEndpoint URL: %.*s", (int) endpoint->endpointUrl.length, endpoint->endpointUrl.data);
-            printf("\n\t\tTransport profile URI: %.*s", (int) endpoint->transportProfileUri.length,
-                   endpoint->transportProfileUri.data);
-            printf("\n\t\tSecurity Mode: ");
-            switch(endpoint->securityMode) {
-            case UA_MESSAGESECURITYMODE_INVALID:
-                printf("Invalid");
-                break;
-            case UA_MESSAGESECURITYMODE_NONE:
-                printf("None");
-                break;
-            case UA_MESSAGESECURITYMODE_SIGN:
-                printf("Sign");
-                break;
-            case UA_MESSAGESECURITYMODE_SIGNANDENCRYPT:
-                printf("Sign and Encrypt");
-                break;
-            default:
-                printf("No valid security mode");
-                break;
-            }
-            printf("\n\t\tSecurity profile URI: %.*s", (int) endpoint->securityPolicyUri.length,
-                   endpoint->securityPolicyUri.data);
-            printf("\n\t\tSecurity Level: %d", endpoint->securityLevel);
-        }
-
-        UA_Array_delete(endpointArray, endpointArraySize, &UA_TYPES[UA_TYPES_ENDPOINTDESCRIPTION]);
-        UA_Client_delete(client);
-    }
-
-    printf("\n");
 
     UA_Array_delete(applicationDescriptionArray, applicationDescriptionArraySize,
                     &UA_TYPES[UA_TYPES_APPLICATIONDESCRIPTION]);

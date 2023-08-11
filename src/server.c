@@ -272,6 +272,8 @@ UA_Boolean running = true;
 
 VOID  thread_server_entry(ULONG thread_input)
 {
+    sntp_time_sync();
+
     UA_Server *server = UA_Server_new();
     UA_ServerConfig_setDefault(UA_Server_getConfig(server));
 

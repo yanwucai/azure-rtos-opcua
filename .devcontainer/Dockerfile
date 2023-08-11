@@ -25,7 +25,7 @@ RUN apt update \
     && rm /usr/share/keyrings/kitware-archive-keyring.gpg \
     #
     # Install C++ tools and Git
-    && apt -y install --no-install-recommends sudo build-essential gcc-multilib g++-multilib gdb cgdb cppcheck git cmake kitware-archive-keyring ninja-build zip unzip ethtool iproute2 iptables net-tools dnsutils iputils-ping ncat pkg-config python2\
+    && apt -y install --no-install-recommends sudo build-essential gcc-multilib g++-multilib gdb cgdb cppcheck git cmake kitware-archive-keyring ninja-build zip unzip ethtool iproute2 iptables net-tools dnsutils iputils-ping ncat pkg-config python2 ntp\
     #
     # [Optional] Update UID/GID if needed
     && if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
@@ -33,6 +33,10 @@ RUN apt update \
     && usermod --uid $USER_UID --gid $USER_GID $USERNAME \
     && chown -R $USER_UID:$USER_GID /home/$USERNAME; \
     fi \
+    # Configure NTP
+    sed -i -e '/pool /d' -e '$ a\server 127.127.1.0 prefer\nfudge 127.127.1.0' /etc/ntp.conf \
+    update-rc.d ntp enable \
+    service ntp start \
     #
     # Clean up
     && apt autoremove -y \

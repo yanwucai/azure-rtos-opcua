@@ -7,6 +7,7 @@ ifconfig veth1 up
 ethtool --offload veth2 tx off
 ethtool --offload veth1 tx off
 
+service ntp start
 
 # sysctl net.ipv4.ip_forward=1
 iptables -F

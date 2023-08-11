@@ -23,7 +23,7 @@
 
 #define          DEMO_STACK_SIZE     (16*1024)
 
-#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 5)
+#define          SAMPLE_IPV4_ADDRESS IP_ADDRESS(192, 168, 201, 9)
 #define          SAMPLE_IPV4_MASK    0xFFFFFF00UL
 #define          SAMPLE_IPV4_GATEWAY IP_ADDRESS(192, 168, 201, 2)
 
@@ -389,6 +389,8 @@ addDataSetWriter(UA_Server *server) {
 
 VOID  thread_server_entry(ULONG thread_input)
 {
+    sntp_time_sync();
+
     UA_String transportProfile =
         UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
     UA_NetworkAddressUrlDataType networkAddressUrl =
