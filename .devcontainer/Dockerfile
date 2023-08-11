@@ -34,9 +34,9 @@ RUN apt update \
     && chown -R $USER_UID:$USER_GID /home/$USERNAME; \
     fi \
     # Configure NTP
-    sed -i -e '/pool /d' -e '$ a\server 127.127.1.0 prefer\nfudge 127.127.1.0' /etc/ntp.conf \
-    update-rc.d ntp enable \
-    service ntp start \
+    && sed -i -e '/pool /d' -e '$ a\server 127.127.1.0 prefer\nfudge 127.127.1.0' /etc/ntp.conf \
+    && update-rc.d ntp enable \
+    && service ntp start \
     #
     # Clean up
     && apt autoremove -y \
