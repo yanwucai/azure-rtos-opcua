@@ -7,7 +7,7 @@ This repo contains sample projects of open62541 running on Azure RTOS.
 [GitHub Codespaces](https://github.com/features/codespaces) is the preferred way to building and run these sample if you have your GitHub account enabled for this feature. Otherwise, you can still use it with the [local dev container](https://code.visualstudio.com/docs/remote/containers) or set up the toolchain by your own.
 
 
-## Building and running the project
+## Building the project
 
 1. Fork this GitHub repo to your own GitHub account. Codespaces requires read/write access which is why a fork is necessary.
 
@@ -19,11 +19,13 @@ This repo contains sample projects of open62541 running on Azure RTOS.
 
 1. After the building is completed, depress Ctrl+Shift+P and select Tasks: Run Task again. Select Build open62541 Project.
 
+## Running the project
+
 Follow the steps below to run the examples.
 
-### server
+### OPC UA Server on Azure RTOS
 
-This example runs a simple OPC UA server on Azure RTOS. The OPC UA client from open62541 will connect to the server using TCP and read the variable holding the server current time.
+This example runs a simple OPC UA server on Azure RTOS. The OPC UA client for Linux will connect to the server using TCP and read the variable holding the server current time.
 
 1. Depress Ctrl+Shift+P to activate the command palette, then select Tasks: Run Task and then select Run Azure RTOS OPC UA Project. Select server to run the server example.
     The terminal window should output the log that the server is listening on the network.
@@ -45,9 +47,9 @@ This example runs a simple OPC UA server on Azure RTOS. The OPC UA client from o
     [2023-08-15 01:34:21.899 (UTC+0000)] info/client        Client Status: ChannelState: Closed, SessionState: Closed, ConnectStatus: Good
     ```
 
-### client
+### OPC UA Client on Azure RTOS
 
-This example runs a simple OPC UA client on Azure RTOS and it will connect to the open62541 server to read the current time from it.
+This example runs a simple OPC UA client on Azure RTOS and it will connect to the open62541 server for Linux to read the current time from it.
 
 1. Run the following command in the terminal window to start the server:
 
@@ -68,7 +70,7 @@ This example runs a simple OPC UA client on Azure RTOS and it will connect to th
     [2023-08-15 01:38:24.050 (UTC+0000)] info/client        Client Status: ChannelState: Closed, SessionState: Closed, ConnectStatus: Good
     ```
 
-### PubSub
+### OPC UA PubSub on Azure RTOS
 
 This example runs a PubSub publisher on Azure RTOS to publish over UDP multicast and a subscriber to read the published message.
 
@@ -92,81 +94,6 @@ This example runs a PubSub publisher on Azure RTOS to publish over UDP multicast
     ...
     ```
 
-
-### discovery
-
-This example runs a local discovery server on Linux and an OPC UA server on Azure RTOS registers itself to the discovery server. Then a client on Azure RTOS connect to the discovery server and find servers registered in the discovery server.
-
-1. Run the following command in the terminal window:
-
-    ```
-    ./libs/open62541/build/bin/examples/discovery_server_lds
-    ```
-
-1. Depress Ctrl+Shift+P to activate the command palette, then select Tasks: Run Task and then select Run Azure RTOS OPC UA Project. Select discovery_server_regist to run register a server to the LDS.
-
-    The following is a sample output from the discovery_server_regist example:
-
-    ```
-    ...
-    [2023-08-15 02:19:16.500 (UTC+0000)] info/session       SecureChannel 0 | Session "Administrator" | AddNode (ns=1;s=the.answer): No TypeDefinition. Use the default TypeDefinition for the Variable/Object
-    [2023-08-15 02:19:16.500 (UTC+0000)] info/userland      Node read the.answer
-    [2023-08-15 02:19:16.500 (UTC+0000)] info/userland      read value 42
-    [2023-08-15 02:19:16.500 (UTC+0000)] info/userland      Node read the.answer
-    [2023-08-15 02:19:16.500 (UTC+0000)] info/userland      read value 42
-    [2023-08-15 02:19:16.500 (UTC+0000)] warn/userland      AcceptAll Certificate Verification. Any remote certificate will be accepted.
-    [2023-08-15 02:19:16.500 (UTC+0000)] info/network       TCP network layer listening on opc.tcp://localhost:4841/
-    [2023-08-15 02:19:17.000 (UTC+0000)] info/channel       Connection 35 | SecureChannel 1 | SecureChannel opened with SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None and a revised lifetime of 600.00s
-    [2023-08-15 02:19:17.000 (UTC+0000)] info/client        Client Status: ChannelState: Open, SessionState: Closed, ConnectStatus: Good
-    ...
-    ```
-
-1. Open a new terminal by selecting the "+" in the terminal window. Run the following command:
-    ```
-    sudo ./build/discovery_client_find_servers
-    ```
-
-    This will run the discovery_client_find_servers example to show a list of registered servers found by the client.
-
-    ```
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/channel       Connection 33 | SecureChannel 3 | SecureChannel opened with SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None and a revised lifetime of 600.00s
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/client        Client Status: ChannelState: Open, SessionState: Closed, ConnectStatus: Good
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/client        Client Status: ChannelState: Closed, SessionState: Closed, ConnectStatus: Good
-    Server[0]: LDS-codespaces-6f50e9
-            RecordID: 0
-            Discovery URL: opc.tcp://codespaces-6f50e9:4840
-            Capabilities: LDS,
-
-    Server[1]: open62541-based OPC UA Application-localhost
-            RecordID: 1
-            Discovery URL: opc.tcp://localhost:4841
-            Capabilities: NA,
-
-    [2023-08-15 02:19:28.510 (UTC+0000)] warn/userland      AcceptAll Certificate Verification. Any remote certificate will be accepted.
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/channel       Connection 34 | SecureChannel 4 | SecureChannel opened with SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None and a revised lifetime of 600.00s
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/client        Client Status: ChannelState: Open, SessionState: Closed, ConnectStatus: Good
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/client        Use the EndpointURL opc.tcp://localhost:4841/ returned from FindServers
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/client        Client Status: ChannelState: Closed, SessionState: Closed, ConnectStatus: Good
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/channel       Connection 35 | SecureChannel 5 | SecureChannel opened with SecurityPolicy http://opcfoundation.org/UA/SecurityPolicy#None and a revised lifetime of 600.00s
-    [2023-08-15 02:19:28.510 (UTC+0000)] info/client        Client Status: ChannelState: Open, SessionState: Closed, ConnectStatus: Good
-    [2023-08-15 02:19:28.520 (UTC+0000)] info/client        Client Status: ChannelState: Closed, SessionState: Closed, ConnectStatus: Good
-    Server[0]: urn:open62541.example.local_discovery_server
-            Name: open62541-based OPC UA Application
-            Application URI: urn:open62541.example.local_discovery_server
-            Product URI: http://open62541.org
-            Type: Discovery Server
-            Discovery URLs:
-                    [0]: opc.tcp://codespaces-6f50e9:4840/
-
-    Server[1]: urn:open62541.example.server_register
-            Name: open62541-based OPC UA Application
-            Application URI: urn:open62541.example.server_register
-            Product URI: http://open62541.org
-            Type: Server
-            Discovery URLs:
-                    [0]: opc.tcp://localhost:4841/
-                    [1]: opc.tcp://localhost:4841/
-    ```
 
 ## Resources
 
