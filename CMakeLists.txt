@@ -50,6 +50,7 @@ set(UA_ARCHITECTURE "azurertos" CACHE STRING "Architecture to build open62541 on
 set(UA_ENABLE_PUBSUB ON CACHE BOOL "Enable the PubSub protocol")
 set(UA_ENABLE_DISCOVERY ON CACHE BOOL "Enable Discovery Service (LDS)")
 set(UA_FORCE_32BIT ON CACHE BOOL "Force compilation as 32-bit executable")
+set(UA_MULTITHREADING 100 CACHE STRING "Level of multithreading (0-99: No Multithreading, >=100: Thread-Safe API")
 
 # Project
 set(PROJECT project_azurertos_opcua)
