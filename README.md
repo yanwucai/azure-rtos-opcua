@@ -51,9 +51,9 @@ This example runs a simple OPC UA client on Azure RTOS and it will connect to th
 
 1. Run the following command in the terminal window to start the server:
 
-```
-./libs/open62541/build/bin/examples/server_mainloop
-```
+    ```
+    ./libs/open62541/build/bin/examples/server_mainloop
+    ```
 
 1. Depress Ctrl+Shift+P to activate the command palette, then select Tasks: Run Task and then select Run Azure RTOS OPC UA Project. Select client to run the client example on Azure RTOS.
 
