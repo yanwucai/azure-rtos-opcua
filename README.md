@@ -19,7 +19,7 @@ This repo contains sample projects of open62541 running on Azure RTOS.
 
 1. After the building is completed, depress Ctrl+Shift+P and select Tasks: Run Task again. Select Build open62541 Project.
 
-Following the following steps to run the examples.
+Follow the steps below to run the examples.
 
 ### server
 
