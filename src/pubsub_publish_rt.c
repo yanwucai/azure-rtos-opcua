@@ -16,7 +16,7 @@
 #include "nxd_sntp_client.h"
 
 
-#include <open62541/plugin/pubsub_udp.h>
+
 #include <open62541/plugin/pubsub_ethernet.h>
 #include <open62541/server.h>
 #include <open62541/plugin/log_stdout.h>
@@ -393,10 +393,11 @@ VOID  thread_server_entry(ULONG thread_input)
     sntp_time_sync();
 
     UA_String transportProfile =
-        UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
+        UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-eth-uadp");
     UA_NetworkAddressUrlDataType networkAddressUrl =
-        {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
+        {UA_STRING_NULL , UA_STRING("opc.eth://01-00-5E-00-00-01:12.3")};
 
+    networkAddressUrl.networkInterface = UA_STRING("PRI");
 
     UA_Server *server = UA_Server_new();
     UA_ServerConfig *config = UA_Server_getConfig(server);
@@ -404,10 +405,8 @@ VOID  thread_server_entry(ULONG thread_input)
 
     /* Details about the connection configuration and handling are located in
      * the pubsub connection tutorial */
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
-#ifdef UA_ENABLE_PUBSUB_ETH_UADP
     UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerEthernet());
-#endif
+
 
     addPubSubConnection(server, &transportProfile, &networkAddressUrl);
     addPublishedDataSet(server);

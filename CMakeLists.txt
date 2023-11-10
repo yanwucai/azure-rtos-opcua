@@ -50,7 +50,8 @@ set(UA_ARCHITECTURE "azurertos" CACHE STRING "Architecture to build open62541 on
 set(UA_ENABLE_PUBSUB ON CACHE BOOL "Enable the PubSub protocol")
 set(UA_ENABLE_DISCOVERY ON CACHE BOOL "Enable Discovery Service (LDS)")
 set(UA_FORCE_32BIT ON CACHE BOOL "Force compilation as 32-bit executable")
-set(UA_MULTITHREADING 100 CACHE STRING "Level of multithreading (0-99: No Multithreading, >=100: Thread-Safe API")
+set(UA_MULTITHREADING 100 CACHE STRING "Level of multithreading (0-99: No Multithreading, >=100: Thread-Safe API)")
+set(UA_ENABLE_PUBSUB_ETH_UADP ON CACHE BOOL "Enable publish/subscribe UADP over Ethernet")
 
 # Project
 set(PROJECT project_azurertos_opcua)
@@ -71,5 +72,7 @@ add_example(server src/server.c)
 add_example(client src/client.c)
 add_example(pubsub_publish src/pubsub_publish.c)
 add_example(pubsub_subscribe src/pubsub_subscribe.c)
+add_example(pubsub_publish_rt src/pubsub_publish_rt.c)
+add_example(pubsub_subscribe_rt src/pubsub_subscribe_rt.c)
 add_example(discovery_server_regist src/discovery_server_regist.c)
 add_example(discovery_client_find_servers src/discovery_client_find_servers.c)

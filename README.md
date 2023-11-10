@@ -94,6 +94,17 @@ This example runs a PubSub publisher on Azure RTOS to publish over UDP multicast
     ...
     ```
 
+## Supported Build Options
+
+The following build options are currently supported when building with Azure RTOS:
+
+- UA_ENABLE_PUBSUB
+- UA_ENABLE_DISCOVERY
+- UA_MULTITHREADING
+- UA_ENABLE_SUBSCRIPTIONS
+- UA_ENABLE_SUBSCRIPTIONS_EVENTS
+- UA_ENABLE_DA
+- UA_ENABLE_METHODCALLS
 
 ## Resources
 
